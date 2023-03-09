@@ -2,7 +2,7 @@ import { SignInFormType } from '@/@types/auth';
 import { AuthButton, AuthTextInput, Balloon } from '@/components/auth';
 import styled from 'styled-components';
 
-export const SignInView = ({ control, onSubmit }: SignInFormType) => {
+export const SignInView = ({ control, onSubmit, errors }: SignInFormType) => {
   return (
     <Form onSubmit={onSubmit}>
       <Header>
@@ -12,7 +12,13 @@ export const SignInView = ({ control, onSubmit }: SignInFormType) => {
       </Header>
       <InputContainer>
         <Label>이메일</Label>
-        <AuthTextInput name="email" control={control} placeholder="이메일" />
+        <AuthTextInput
+          name="email"
+          type="email"
+          control={control}
+          placeholder="이메일"
+          error={errors.email}
+        />
       </InputContainer>
       <InputContainer>
         <Label>비밀번호</Label>
@@ -21,6 +27,7 @@ export const SignInView = ({ control, onSubmit }: SignInFormType) => {
           type="password"
           control={control}
           placeholder="비밀번호"
+          error={errors.password}
         />
       </InputContainer>
       <ButtonContainer>
@@ -35,7 +42,7 @@ const Form = styled('form')`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing(5)};
+  gap: ${({ theme }) => theme.spacing(2)};
 `;
 
 const Header = styled('header')`

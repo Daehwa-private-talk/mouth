@@ -1,6 +1,12 @@
 import React, { InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
-import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  FieldError,
+  FieldValues,
+  Path,
+} from 'react-hook-form';
 
 interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string;
@@ -11,11 +17,13 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
 interface Props<T extends FieldValues> extends TextInputProps {
   name: string;
   control: Control<T>;
+  error?: FieldError;
 }
 
 export const AuthTextInput = function <T extends FieldValues>({
   name,
   control,
+  error,
   value,
   placeholder,
   onChange,
@@ -26,20 +34,29 @@ export const AuthTextInput = function <T extends FieldValues>({
       control={control}
       name={name as Path<T>}
       render={({ field }) => (
-        <Input
-          {...textInputProps}
-          {...field}
-          value={value}
-          placeholder={placeholder}
-          onChange={(e) => {
-            field.onChange(e);
-            onChange?.(e);
-          }}
-        />
+        <InputContainer>
+          <Input
+            {...textInputProps}
+            {...field}
+            value={value}
+            placeholder={placeholder}
+            onChange={(e) => {
+              field.onChange(e);
+              onChange?.(e);
+            }}
+          />
+          <Error>{error?.message}</Error>
+        </InputContainer>
       )}
     />
   );
 };
+
+const InputContainer = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(2)};
+`;
 
 const Input = styled('input')`
   width: 320px;
@@ -60,4 +77,10 @@ const Input = styled('input')`
   &:focus::placeholder {
     opacity: 0;
   }
+`;
+
+const Error = styled('p')`
+  color: ${({ theme }) => theme.colors.yellow};
+  font-size: 0.7rem;
+  font-weight: 500;
 `;
